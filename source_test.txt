@@ -1,0 +1,32 @@
+def update_line_numbers(self):
+        cursor = self.text_area.textCursor()
+        block = cursor.block()
+        line_count = block.blockNumber() + 1
+        col_count = cursor.positionInBlock() + 1
+        text = f"{self.tabs.tabText(self.tabs.currentIndex())} - 행: {line_count}, 열: {col_count}"
+        self.statusBar.showMessage(text)
+
+
+Scroll test1
+
+
+    def line_number_area_width(self):
+        digits = len(str(self.text_area.blockCount()))
+        space = 3 + self.text_area.fontMetrics().width('9') * 5
+        return space
+
+    def update_current_tab(self, index):
+        if index == -1:
+            return
+        widget = self.tabs.widget(index)
+        if widget is None:
+            return
+        layout = widget.layout()
+        line_number_area = layout.itemAt(0).widget()
+        if line_number_area is not None:
+            line_number_area.update(
+
+
+
+
+test1

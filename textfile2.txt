@@ -1,0 +1,9 @@
+        text_area = QPlainTextEdit()
+        font = QFont("Arial", 10)
+        text_area.setFont(font)
+        text_area.cursorPositionChanged.connect(self.update_line_numbers)
+        text_area.textChanged.connect(self.update_line_numbers)
+
+        line_number_area = LineNumberArea(text_area)        
+        line_number_area.setFixedWidth(self.line_number_area_width())
+        line_number_area.setFont(font)
