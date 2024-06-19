@@ -1,10 +1,15 @@
-import sys
+import sys, logging
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QAction, QFileDialog, QMessageBox,
                              QTabWidget, QVBoxLayout, QWidget, QPlainTextEdit, QHBoxLayout, QTextEdit,
                              QFontDialog, QStatusBar, QDialog, QLabel, QLineEdit, QPushButton)
 from PyQt5.QtGui import QFont, QPainter, QIcon, QTextCursor, QTextDocument, QColor, QTextFormat, QTextCharFormat
 from PyQt5.QtCore import Qt, QSize, QRect
 
+''' test remark'''
+
+def setup_logging():
+    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', 
+                        handlers=[logging.FileHandler('pyEEditor_log.log'), logging.StreamHandler()])
 
 class LineNumberArea(QWidget):
     def __init__(self, editor):
@@ -20,7 +25,12 @@ class LineNumberArea(QWidget):
         block_number = block.blockNumber()
 
         top = self.editor.text_area.blockBoundingGeometry(block).translated(self.editor.text_area.contentOffset()).top()
-        bottom = top + self.editor.text_area.blockBoundingRect(block).height()
+        bottom = int(top) + self.editor.text_area.blockBoundingRect(block).height()
+
+        logger.info('paintEvent top float :%d'%top)
+        logger.info('paintEvent top float :%d'%int(top))
+        logger.info('paintEvent bottom:%d'%bottom)
+        logger.info('paintEvent bottom2:%d'%bottom)
 
         # Adjust position and font
         font = self.editor.text_area.font()
@@ -29,12 +39,12 @@ class LineNumberArea(QWidget):
 
         while block.isValid() and top <= event.rect().bottom():
             if block.isVisible() and bottom >= event.rect().top():
-                number = str(block_number + 1) + "  "  # Add a space after the number
-                painter.drawText(0, top, self.width() - 5, font.pointSize() + 4, Qt.AlignRight, number)
+                number = str(block_number + 1) # Add a space after the number
+                painter.drawText(0, int(top), self.width() - 5, font.pointSize() + 4, Qt.AlignRight, number)
 
             block = block.next()
             top = bottom
-            bottom = top + self.editor.text_area.blockBoundingRect(block).height()
+            bottom = int(top) + self.editor.text_area.blockBoundingRect(block).height()
             block_number += 1
 
     def sizeHint(self):
@@ -371,8 +381,11 @@ class TextEditor(QMainWindow):
         space = 3 + self.text_area.fontMetrics().width('9') * digits
         return space
 
-
 if __name__ == '__main__':
+    setup_logging()
+    #logger 생성
+    logger = logging.getLogger(__name__)
+
     app = QApplication(sys.argv)
     editor = TextEditor()
     editor.show()
